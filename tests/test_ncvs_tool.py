@@ -1,1 +1,1 @@
-from ncvs_tool import ncvs_tool
+from ncvs_tool import ncvsTool
