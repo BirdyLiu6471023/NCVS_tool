@@ -2,7 +2,7 @@ import pickle
 import requests
 import pandas as pd
 import numpy as np
-from tabula import read_pdf
+import tabula
 
 
 def dataname2url():
@@ -36,7 +36,7 @@ def get_survey_sample_size():
 
 def extract_personal_victimization_cookbook():
     # read tables in pdf files and wrangling data:
-    df = read_pdf("NCVS_Select_person_level_codebook.pdf", pages=[6,7,8,9,10], lattice=True, guess = False, stream = True)
+    df = tabula.read_pdf("NCVS_Select_person_level_codebook.pdf", pages=[6,7,8,9,10], lattice=True, guess = False, stream = True)
     pv_cb = {}
     all_features = set()
     for p in range(5):

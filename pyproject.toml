@@ -11,6 +11,7 @@ python = "^3.9"
 pandas = "^1.5.2"
 requests = "^2.28.1"
 tabula = "^1.0.5"
+matplotlib = "^3.6.2"
 
 [tool.poetry.dev-dependencies]
 

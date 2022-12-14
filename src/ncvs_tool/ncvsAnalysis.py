@@ -1,5 +1,5 @@
-from ncvsTool import NCVStool
-import visualizationTool as vt
+from ncvs_tool.ncvsTool import NCVStool
+import ncvs_tool.visualizationTool as vt
 import pandas as pd
 import numpy as np
 

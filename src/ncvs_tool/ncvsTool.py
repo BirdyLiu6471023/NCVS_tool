@@ -5,17 +5,17 @@ import pandas as pd
 import re
 import numpy as np
 import os
-if not os.path.exists("dataname2url.json"):
-    from dataLibrary import dataname2url
+if not os.path.exists("src/ncvs_tool/dataname2url.json"):
+    from ncvs_tool.dataLibrary import dataname2url
     dataname2url()
 
-if not os.path.exists("sample_size.csv"):
-    from dataLibrary import get_survey_sample_size
+if not os.path.exists("src/ncvs_tool/sample_size.csv"):
+    from ncvs_tool.dataLibrary import get_survey_sample_size
     get_survey_sample_size()
 
-if not os.path.exists("personal_victimization_dictionary.json"):
-    import dataLibrary
-    dataLibrary.create_personal_victimization_dictionary()
+if not os.path.exists("src/ncvs_tool/personal_victimization_dictionary.json"):
+    import ncvs_tool.dataLibrary
+    ncvs_tool.dataLibrary.create_personal_victimization_dictionary()
 
 class NCVStool:
 
