@@ -1,12 +1,20 @@
-from ncvs_tool import ncvsTool as nt
-from ncvs_tool import ncvsAnalysis as na
-from ncvs_tool import dataLibrary
-from ncvs_tool import visualizationTool
+from ncvs_tool import ncvsAnalysis
 import os
 
 
-#na.ncvs_report("Personal Victimization", 2021, group="sex", target="notify", target_range=2, pivot=False, encode=False,
-               #output_pct=False, output_picture=False)
+# 1) test required files in source:
+def test_dicfile_exist():
+    assert (os.path.exists("src/ncvs_tool/dataname2url.json") or os.path.exists("src/ncvs_tool/sample_size.csv")
+            or os.path.exists("src/ncvs_tool/personal_victimization_dictionary.json"))
 
-print(os.path.exists("src/ncvs_tool/dataname2url.json"))
+
+# 2) test ncvs analysis function ncvs_report:
+def test_enlabel_work():
+    a = ncvsAnalysis.ncvs_report("Personal Victimization", year=2021, group="sex", pivot=False, output_pct=False,
+                                 output_picture=False)
+    assert isinstance(a.iloc[0, 0], str)
+
+
+
+
 

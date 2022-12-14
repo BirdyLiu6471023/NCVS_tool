@@ -54,16 +54,17 @@ def ncvs_report(dataname, year, group, target="notify", target_range=2, pivot=Fa
                 output_picture=True):
     # request data:
     dt = NCVStool(dataname)
-    df_y = dt.NCVS_query(limit=10000, encode = encode, year=year)
+    df_y = dt.NCVS_query(limit=10000, year=year)
 
-    # group data
     df_t = pd.DataFrame(df_y.groupby([group, target]).idper.count()).reset_index().astype(int)
     df_t.columns = [group, target, "count"]
-
     df_t = df_t[df_t[target] <= target_range]
 
-    df_pivot = pd.pivot_table(df_t, values="count", index=group, columns=target, aggfunc=np.sum)
+    df_t[[group, target]] = df_t[[group, target]].astype(str)
+    if not encode:
+        df_t = dt.label_transform(df=df_t)
 
+    df_pivot = pd.pivot_table(df_t, values="count", index=group, columns=target, aggfunc=np.sum)
 
     if output_picture:
         vt.group_bar(df_pivot, xlabel=group, ylabel=f"count of {target}")
