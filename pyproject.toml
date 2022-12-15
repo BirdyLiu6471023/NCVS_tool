@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ncvs_tool"
-version = "0.1.4"
+version = "0.1.5"
 description = "Package for accessing data of National Crime Victimization Survey. "
 authors = ["Siqi Liu"]
 license = "MIT"

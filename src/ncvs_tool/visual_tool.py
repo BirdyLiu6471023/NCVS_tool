@@ -17,6 +17,6 @@ def group_bar(data, xlab, ylab):
         plt.bar(x + i * width, data.iloc[:, i], width=width)
         plt.xlabel(xlab)
         plt.ylabel(ylab)
-        plt.legend(data.index)
-        plt.xticks(list(range(len(data.columns))), list(data.columns))
+        plt.legend(data.columns)
+        plt.xticks(list(range(len(data))), list(data.index))
 
