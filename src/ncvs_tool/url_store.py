@@ -6,8 +6,14 @@ import tabula
 
 
 def dataname2url():
-    dataname2url = {}
+    """
+    This is function to store the dataset name and its correspond url.
+    There are 4 dataset BJS provided. All of datasets could be requested,
+    but only "Personal Victimization" offer all of functions.
+    :return:
+    """
 
+    dataname2url = {}
     dataname2url["Personal Victimization"] = "https://data.ojp.usdoj.gov/resource/gcuy-rt5g"
     dataname2url["Personal Population"] = "https://data.ojp.usdoj.gov/resource/r4j4-fdwx"
     dataname2url["Household Victimization"] = "https://data.ojp.usdoj.gov/resource/gkck-euys"
@@ -17,6 +23,12 @@ def dataname2url():
 
 
 def get_survey_sample_size():
+    """
+    The function scraped information from the website of BJS, accessing the sample size of survey.
+    Note: non-structured data, need to manually update year to year:
+    :return: df, pd.DataFrame
+    """
+
     # non-structured data, need to manually update year to year:
     url = "https://bjs.ojp.gov/bjs.ojp.gov/samplesize.xlsx"
     s = requests.get(url).content
@@ -34,9 +46,12 @@ def get_survey_sample_size():
     return df
 
 
-# this function could not be used because of unable to access the pdf.
+
 def extract_personal_victimization_cookbook():
-    # read tables in pdf files and wrangling data:
+    """
+    This function is useful when the package was cloned from the github.
+    It would extract data labels from the data cookbook and help to transform the number label to its original label.
+    """
     df = tabula.read_pdf("docs/NCVS_Select_person_level_codebook.pdf", pages=[6, 7, 8, 9, 10], lattice=True,
                          guess=False, stream=True)
     pv_cb = {}
@@ -64,9 +79,12 @@ def extract_personal_victimization_cookbook():
 
 
 def create_personal_victimization_dictionary():
-    # dealing with the variable that failed in extracting pdf file...
-    # and create a json file to store the file:
-    # cv, failed = extract_personal_victimization_cookbook()
+    """
+    This function is used as storage space to store extracted information.
+    would be updated later using MANIFEST.IN.......
+    :return: dictionary of personal victimization
+    """
+
     cv = {'idper': {'Unique identifier': 'N A'}, 'yearq': {'YYYY.Q': 'N A'}, 'year': {'1993-2021': 'N A'},
           'ager': {'1': '12-17',
                    '2': '18-24',

@@ -3,13 +3,21 @@ import requests
 import pandas as pd
 import re
 import numpy as np
-from ncvs_tool import dataLibrary
+from ncvs_tool import url_store
+
 
 class NCVStool:
 
-    def __init__(self, dataname, api_token = None, username = None, password = None):
-        # dic store the datasetname and its url:
-        self.dataname2url = dataLibrary.dataname2url()
+    def __init__(self, dataname="Personal Victimization", api_token=None, username=None, password=None):
+        """
+        This class could query data and also store your requested data from same dataset.
+        Government dataset does not require api_token or username and password.
+        :param dataname: string, default = "Personal Victimization"
+        :param api_token: string
+        :param username: string
+        :param password: string
+        """
+        self.dataname2url = url_store.dataname2url()
         self.dataname = dataname
         self.sample_size = None
 
@@ -28,20 +36,32 @@ class NCVStool:
         if username and password:
             self.s.auth = (username, password)
 
-
     def identification_match(self, username, password):
+        """
+        This function check if user provid both username and password.
+        used in self.__init__()
+        :param username:
+        :param password:
+        :return:
+        """
+
         if (not username and password) or (username and not password):
             raise Exception("Please input BOTH username AND password!")
 
-    def get_valid_params(self, output_valid_params = True):
-
-        # try to access the data and get the columns of the dataset
+    def get_valid_params(self, output_valid_params=True):
+        """
+        This function would help to check if user entered params are vaild,
+        which also could provide users vaild params in self.NCVS_query()
+        :param output_valid_params: boolean
+        :return:
+        if output_valid_params True, output a set with vaild params that could be entered in self.NCVS_query()
+        """
         try:
-            limit = {"$limit":100}
-            test = self.s.get(self.dataname2url[self.dataname], params = limit)
+            limit = {"$limit": 100}
+            test = self.s.get(self.dataname2url[self.dataname], params=limit)
             if test.status_code >= 400:
                 error_message = f"Request Error: {test.status_code}"
-                raise requests.exceptions.HTTPError(error_message, response = test)
+                raise requests.exceptions.HTTPError(error_message, response=test)
             else:
                 test = test.json()
                 test_df = pd.DataFrame.from_records(test)
@@ -51,29 +71,32 @@ class NCVStool:
         except:
             print(error_message)
 
-    def NCVS_query(self, limit = 100000, encode = True, **kwargs):
+    def query(self, limit=100000, encode=True, **kwargs):
         """
+        This a function that could query your wanted group of dataset.
+        * Note: The original data requested from API is encoded data,
+         which is all numbers without original label meaning. This query
+         provide user option to output encoded dataset or dataset with original
+         meaning label, developer could also refer the NCVS_cook book in docs/ in github.
 
+        :param limit: the number of records output.
 
-        :param encode:
-        if True, output dataset from requests that is encoded as number;
-        if false, transform the requested data into original label.
+        :param encode: if True, output dataset from requests that is encoded as number; if false, transform the
+        requested data into original label.
 
         :param kwargs:
-        >> simple query:
-        if your query is "=" then input directly, e.g. weapon = 1
-
+        >> simple query: if your query is "=" then input directly, e.g. weapon = 1
         >> complex query:
-        1) if your query is "<",">" "<=",">=" with logic computation, use where,
-        e.g. 1 where = "weapon>1"; 2 where = "ager>2 OR weapon>1" 3 where = "ager>2 AND weapon=1"
+        1) if your query is "<",">" "<=",">=" with logic computation, use where,e.g. 1 where = "weapon>1"; 2 where =
+        "ager>2 OR weapon>1" 3 where = "ager>2 AND weapon=1"
         2) if you need to limit the amount of output, use limit, e.g. limit = 1000
         3) if you only need subset of the columns, use select, e.g. select = "idper,ager"
 
-        :return:
-        r_df: pandas.DataFrame
+        :return: r_df: pandas.DataFrame
         """
+
         if not self.valid_params:
-            self.get_valid_params(output_valid_params = False)
+            self.get_valid_params(output_valid_params=False)
 
         other_params = set(["limit", "where", "select"])
 
@@ -85,7 +108,7 @@ class NCVStool:
             elif key in other_params:
                 # insert an valid params check here:
                 if key == "where":
-                    where_list = set(re.findall("[a-z]+", value))-set(["in"])
+                    where_list = set(re.findall("[a-z]+", value)) - set(["in"])
                     for i in where_list:
                         if i not in self.valid_params:
                             raise Exception(f"Query param in where {i} invalid")
@@ -102,7 +125,7 @@ class NCVStool:
         r = self.s.get(self.dataname2url[self.dataname], params=params)
 
         if r.status_code >= 400:
-            raise requests.exceptions.HTTPError(f"Request Error: {r.status_code}", response = r)
+            raise requests.exceptions.HTTPError(f"Request Error: {r.status_code}", response=r)
         else:
             self.request_times += 1
 
@@ -112,11 +135,11 @@ class NCVStool:
 
         if not encode:
             r_df_transform = self.label_transform(r_df)
-            return r_df_transform # transform original data
+            return r_df_transform  # transform original data
 
         return r_df
 
-    def get_sample_size(self, output = True):
+    def get_sample_size(self, output=True):
         """
         This function is to get survey sample size for each year.
 
@@ -124,18 +147,23 @@ class NCVStool:
         :return: sample_size: pd.DataFrame
         """
         # get_sample_size for the dataset you requested
-        sample_size = dataLibrary.get_survey_sample_size()
+        sample_size = url_store.get_survey_sample_size()
         if self.dataname == "Personal Victimization":
             self.sample_size = sample_size[["Year", "Persons(Interviewed)"]]
         elif self.dataname == "Household Victimization":
             self.sample_size = sample_size[["Year", "Households(Interviewed)"]]
+        else:
+            raise NotImplementedError
 
         if output:
             return self.sample_size
 
     def label_transform(self, df):
 
-        data_dic = dataLibrary.create_personal_victimization_dictionary()
+        if self.dataname != "Personal Victimization":
+            raise NotImplementedError
+
+        data_dic = url_store.create_personal_victimization_dictionary()
 
         label_map = {}
         for key, value in data_dic.items():
@@ -150,15 +178,3 @@ class NCVStool:
                 pass
 
         return df_transform
-
-
-
-
-
-
-
-
-
-
-
-

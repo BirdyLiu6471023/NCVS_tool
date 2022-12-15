@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def basic_visual_series(x, y, title, xlabel, ylabel, color="purple"):
-    plt.plot(x, y, c=color)
+def basic_visual_series(x, y, title, xlabel, ylabel):
+    plt.plot(x, y)
     plt.xticks(rotation=90)
     plt.title(title)
     plt.xlabel(xlabel)
@@ -18,3 +18,5 @@ def group_bar(data, xlabel, ylabel):
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.legend(data.index)
+        plt.xticks(list(range(len(data.columns))), list(data.columns))
+

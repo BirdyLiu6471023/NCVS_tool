@@ -1,10 +1,11 @@
-from ncvs_tool.ncvsTool import NCVStool
-import ncvs_tool.visualizationTool as vt
+from ncvs_tool.ncvs_tool import NCVStool
+import ncvs_tool.visual_tool as vt
 import pandas as pd
 import numpy as np
 
 
-def year_series(dataname, start=1993, end=2021, group2count=None, colname4group="victimization_freq", output_pct=True,
+def year_series(dataname="Personal Victimization", start=1993, end=2021, group2count=None,
+                colname4group="victimization_freq", output_pct=True,
                 output_picture=False):
     """
     Function giving a time series dataset for your wanted group
@@ -18,6 +19,9 @@ def year_series(dataname, start=1993, end=2021, group2count=None, colname4group=
     :param output_picture: boolean, True if output time series graph;
     :return: Time Series DataFrame (time series graph if output_picture is True).
     """
+    ## this is only valid for dataset "Personal Victimization" and "Personal Population"
+    if dataname not in ["Personal Victimization", "Personal Population"]:
+        raise NotImplementedError
 
     # transform the year range into acceptable format
     year_range = range(start, end + 1)
@@ -26,7 +30,7 @@ def year_series(dataname, start=1993, end=2021, group2count=None, colname4group=
     # request data
     dt = NCVStool(dataname)
     query_str = f"year in {year_list}" if not group2count else f"year in {year_list} AND {group2count}"
-    full_data = dt.NCVS_query(limit=70000, where=query_str)
+    full_data = dt.query(limit=70000, where=query_str)
 
     # frequency of your defined group in victimization survey dataset
     frequency = pd.DataFrame(full_data.groupby("year").idper.count()).reset_index()
@@ -45,24 +49,49 @@ def year_series(dataname, start=1993, end=2021, group2count=None, colname4group=
 
     if output_picture:
         vt.basic_visual_series(year_series_.year, year_series_.pct, f"Tendency of {colname4group}", xlabel="year",
-                            ylabel=f"{colname4group}_rate")
+                               ylabel=f"{colname4group}_rate")
 
     return year_series_
 
 
-def ncvs_report(dataname, year, group, target="notify", target_range=2, pivot=False, encode=False, output_pct=True,
-                output_picture=True):
+def year_report(year, group, target="notify", dataname = "Personal Victimization", target_range=None, pivot=False,
+                encode=False, output_pct=True,output_picture=True):
+    """
+    This function output a table that give a statistic comparison between different groups.
+    For example, if you want to know the difference of "report to police" of two sexs, different ages or different type
+    of crimes. This function would help. It also support output rate/percentage of two group.
+    This function could also output a graph.
+
+    :param dataname: string, default "Personal Victimization""
+    :param year: int, e.g. year = "2021"
+    :param group: string, define how you group victim, vaild params like "age", "sex"
+    :param target: string, define your target variables, valid params like "notify", "series"
+    :param target_range: int, the target range you interested in
+    :param pivot: boolean, if true, output pivot data; if false, output tidy data.
+    :param encode: boolean, if true, output numeric labels; if false, output original labels with meaning.
+    :param output_pct: boolen, if true, output rate of each group; if false, output number of each group.
+    :param output_picture: boolean, if true, output graph of plot.
+    :return:
+    """
+
     # request data:
     dt = NCVStool(dataname)
-    df_y = dt.NCVS_query(limit=10000, year=year)
+    df_y = dt.query(limit=10000, year=year)
 
+    # groupby data:
     df_t = pd.DataFrame(df_y.groupby([group, target]).idper.count()).reset_index().astype(int)
+    # rename data:
     df_t.columns = [group, target, "count"]
+    # only retain useful data
     df_t = df_t[df_t[target] <= target_range]
+    # transform label back to string, which is consistent to ncvs_tool.NCVStool.label_transform():
+    if target:
+        df_t[[group, target]] = df_t[[group, target]].astype(str)
 
-    df_t[[group, target]] = df_t[[group, target]].astype(str)
-    if not encode:
-        df_t = dt.label_transform(df=df_t)
+    # transform data only if dataname = "Personal Victimization":
+    if dataname == "Personal Victimization":
+        if not encode:
+            df_t = dt.label_transform(df=df_t)
 
     df_pivot = pd.pivot_table(df_t, values="count", index=group, columns=target, aggfunc=np.sum)
 
@@ -70,7 +99,7 @@ def ncvs_report(dataname, year, group, target="notify", target_range=2, pivot=Fa
         vt.group_bar(df_pivot, xlabel=group, ylabel=f"count of {target}")
 
     if pivot:
-        if output_pct:
+        if output_pct: # calculate percent of each group.
             for i in range(len(df_pivot)):
                 total = sum(df_pivot.iloc[i, :])
                 for j in range(len(df_pivot.iloc[0])):
@@ -80,8 +109,3 @@ def ncvs_report(dataname, year, group, target="notify", target_range=2, pivot=Fa
         return df_pivot
     else:
         return df_t
-
-
-
-
-
