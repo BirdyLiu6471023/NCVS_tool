@@ -15,7 +15,13 @@ $ pip install ncvs_tool
 
 ## Usage
 
-- TODO
+`ncvs_tool`: enter api-token, request data;
+`ncvs_aly`: do simple analysis, timeseries plot and subplot analysis.
+
+Github: Refer docs/example.ipynb
+
+ReadtheDocs: Refer NCVS_Tool Example usage.
+
 
 ## Description
 
