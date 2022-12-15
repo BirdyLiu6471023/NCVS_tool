@@ -1,12 +1,13 @@
 from ncvs_tool import ncvs_aly
 from ncvs_tool import url_store
+from ncvs_tool import ncvs_tool
 import numpy as np
 
 
 # 1) test ncvs analysis function ncvs_report:
 def test_enlabel_work():
-    a = ncvs_aly.year_report("Personal Victimization", year=2021, group="sex", pivot=False, output_pct=False,
-                             output_picture=False)
+    a = ncvs_aly.year_report(year=2021, group="sex", dataname="Personal Victimization", target_range=2, pivot=False,
+                             output_pct=False, output_picture=False)
     assert isinstance(a.iloc[0, 0], str)
 
 
@@ -22,4 +23,8 @@ def test_get_cook_book():
     c, d = url_store.extract_personal_victimization_cookbook()
     assert (len(c) > 0)
 
-# 4)
+
+# 4) test requesting and getting valid params:
+def test_query_valid():
+    s = ncvs_tool.NCVStool().get_valid_params()
+    assert (len(s) == 37)

@@ -10,13 +10,13 @@ def basic_visual_series(x, y, title, xlabel, ylabel):
     plt.ylabel(ylabel)
 
 
-def group_bar(data, xlabel, ylabel):
+def group_bar(data, xlab, ylab):
     width = 0.3
     x = 1 * np.arange(len(data)) - width * (len(data.columns) / 2) + width / 2
     for i in range(len(data.columns)):
         plt.bar(x + i * width, data.iloc[:, i], width=width)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.xlabel(xlab)
+        plt.ylabel(ylab)
         plt.legend(data.index)
         plt.xticks(list(range(len(data.columns))), list(data.columns))
 

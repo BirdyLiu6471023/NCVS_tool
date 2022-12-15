@@ -19,7 +19,8 @@ def year_series(dataname="Personal Victimization", start=1993, end=2021, group2c
     :param output_picture: boolean, True if output time series graph;
     :return: Time Series DataFrame (time series graph if output_picture is True).
     """
-    ## this is only valid for dataset "Personal Victimization" and "Personal Population"
+
+    # this is only valid for dataset "Personal Victimization" and "Personal Population"
     if dataname not in ["Personal Victimization", "Personal Population"]:
         raise NotImplementedError
 
@@ -54,8 +55,8 @@ def year_series(dataname="Personal Victimization", start=1993, end=2021, group2c
     return year_series_
 
 
-def year_report(year, group, target="notify", dataname = "Personal Victimization", target_range=None, pivot=False,
-                encode=False, output_pct=True,output_picture=True):
+def year_report(year, group, target="notify", dataname="Personal Victimization", target_range=2, pivot=False,
+                encode=False, output_pct=True, output_picture=True):
     """
     This function output a table that give a statistic comparison between different groups.
     For example, if you want to know the difference of "report to police" of two sexs, different ages or different type
@@ -96,10 +97,10 @@ def year_report(year, group, target="notify", dataname = "Personal Victimization
     df_pivot = pd.pivot_table(df_t, values="count", index=group, columns=target, aggfunc=np.sum)
 
     if output_picture:
-        vt.group_bar(df_pivot, xlabel=group, ylabel=f"count of {target}")
+        vt.group_bar(df_pivot, xlab=group, ylab=f"count of {target}")
 
     if pivot:
-        if output_pct: # calculate percent of each group.
+        if output_pct:  # calculate percent of each group.
             for i in range(len(df_pivot)):
                 total = sum(df_pivot.iloc[i, :])
                 for j in range(len(df_pivot.iloc[0])):
