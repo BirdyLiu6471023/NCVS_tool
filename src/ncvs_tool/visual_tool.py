@@ -20,5 +20,5 @@ def group_bar(data, xlab, ylab):
         plt.xlabel(xlab)
         plt.ylabel(ylab)
         plt.legend(data.columns)
-        plt.xticks(list(range(len(data))), list(data.index))
+        plt.xticks(list(range(len(data))), list(data.index), rotation=45)
 
