@@ -70,6 +70,7 @@ class NCVStool:
         :return:
         if output_valid_params True, output a set with vaild params that could be entered in self.NCVS_query()
         """
+        global error_message
         try:
             limit = {"$limit": 100}
             test = self.s.get(self.dataname2url[self.dataname], params=limit)
@@ -81,7 +82,7 @@ class NCVStool:
                 test_df = pd.DataFrame.from_records(test)
                 self.valid_params = set(test_df.columns)
                 if output_valid_params:
-                    return self.valid_params
+                    return list(self.valid_params)
         except:
             print(error_message)
 
@@ -116,7 +117,7 @@ class NCVStool:
         if not self.valid_params:
             self.get_valid_params(output_valid_params=False)
 
-        other_params = set(["limit", "where", "select"])
+        other_params = {"limit", "where", "select"}
 
         kwargs["limit"] = limit
         params = {}
@@ -204,3 +205,12 @@ class NCVStool:
                 pass
 
         return df_transform
+
+    def get_valid_label(self, param):
+        if self.dataname != "Personal Victimization":
+            raise NotImplementedError
+
+        data_dic = url_store.create_personal_victimization_dictionary()
+        label = data_dic[param]
+        return label
+

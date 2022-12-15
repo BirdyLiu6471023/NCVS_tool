@@ -5,8 +5,7 @@ import numpy as np
 
 
 def year_series(dataname="Personal Victimization", start=1993, end=2021, group2count=None,
-                colname4group="victimization_freq", output_pct=True,
-                output_picture=False):
+                colname4group="victimization_freq", output_pct=True, output_picture=False):
     """
     Description:
     ---------------
