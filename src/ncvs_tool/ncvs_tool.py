@@ -10,12 +10,18 @@ class NCVStool:
 
     def __init__(self, dataname="Personal Victimization", api_token=None, username=None, password=None):
         """
+        Description
+        ---------------
         This class could query data and also store your requested data from same dataset.
         Government dataset does not require api_token or username and password.
-        :param dataname: string, default = "Personal Victimization"
-        :param api_token: string
-        :param username: string
-        :param password: string
+
+        Parameters
+        _______________
+        :dataname: string, default = "Personal Victimization"
+        :api_token: string
+        :username: string
+        :password: string
+
         """
         self.dataname2url = url_store.dataname2url()
         self.dataname = dataname
@@ -38,11 +44,16 @@ class NCVStool:
 
     def identification_match(self, username, password):
         """
+        Usage:
+        ---------------
         This function check if user provid both username and password.
         used in self.__init__()
-        :param username:
-        :param password:
-        :return:
+
+        Parameters
+        ---------------
+        :username
+        :password
+
         """
 
         if (not username and password) or (username and not password):
@@ -50,8 +61,11 @@ class NCVStool:
 
     def get_valid_params(self, output_valid_params=True):
         """
+        Description
+        ----------------
         This function would help to check if user entered params are vaild,
         which also could provide users vaild params in self.NCVS_query()
+        ----------------
         :param output_valid_params: boolean
         :return:
         if output_valid_params True, output a set with vaild params that could be entered in self.NCVS_query()
@@ -73,18 +87,22 @@ class NCVStool:
 
     def query(self, limit=100000, encode=True, **kwargs):
         """
+        Description
+        --------------
         This a function that could query your wanted group of dataset.
         * Note: The original data requested from API is encoded data,
          which is all numbers without original label meaning. This query
          provide user option to output encoded dataset or dataset with original
          meaning label, developer could also refer the NCVS_cook book in docs/ in github.
 
-        :param limit: the number of records output.
+        Parameters
+        --------------
+        :limit: the number of records output.
 
-        :param encode: if True, output dataset from requests that is encoded as number; if false, transform the
+        :encode: if True, output dataset from requests that is encoded as number; if false, transform the
         requested data into original label.
 
-        :param kwargs:
+        :kwargs:
         >> simple query: if your query is "=" then input directly, e.g. weapon = 1
         >> complex query:
         1) if your query is "<",">" "<=",">=" with logic computation, use where,e.g. 1 where = "weapon>1"; 2 where =
@@ -141,6 +159,8 @@ class NCVStool:
 
     def get_sample_size(self, output=True):
         """
+        Description:
+        --------------
         This function is to get survey sample size for each year.
 
         :param output: boolean, if True, output sample size for each survey year.
@@ -159,6 +179,12 @@ class NCVStool:
             return self.sample_size
 
     def label_transform(self, df):
+        """
+        Usage:
+        This functions is to transfer the encoded dataframe to dataset with original label meaning.
+        :param df: pd.DataFrame need to do label transfer
+        :return: df
+        """
 
         if self.dataname != "Personal Victimization":
             raise NotImplementedError

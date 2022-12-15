@@ -8,16 +8,24 @@ def year_series(dataname="Personal Victimization", start=1993, end=2021, group2c
                 colname4group="victimization_freq", output_pct=True,
                 output_picture=False):
     """
+    Description:
+    ---------------
     Function giving a time series dataset for your wanted group
 
-    :param dataname: string, your wanted dataset, e.g. dataname = "Personal Victimization";
-    :param start: integer, start year;
-    :param end: integer, end year;
-    :param group2count: string, wanted group in timeseries, e.g. group2count = "ager>2";
-    :param colname4group: string, your defined name for the column for number of each year of this group;
-    :param output_pct: boolean, True if output percent of your group in dataframe;
-    :param output_picture: boolean, True if output time series graph;
-    :return: Time Series DataFrame (time series graph if output_picture is True).
+    Parameters
+    ---------------
+    :dataname: string, your wanted dataset, e.g. dataname = "Personal Victimization";
+    :start: integer, start year;
+    :end: integer, end year;
+    :group2count: string, wanted group in timeseries, e.g. group2count = "ager>2";
+    :colname4group: string, your defined name for the column for number of each year of this group;
+    :output_pct: boolean, True if output percent of your group in dataframe;
+    :output_picture: boolean, True if output time series graph;
+
+    Output
+    ---------------
+    :Time Series DataFrame
+    :(time series graph if output_picture is True).
     """
 
     # this is only valid for dataset "Personal Victimization" and "Personal Population"
@@ -58,21 +66,29 @@ def year_series(dataname="Personal Victimization", start=1993, end=2021, group2c
 def year_report(year, group, target="notify", dataname="Personal Victimization", target_range=2, pivot=False,
                 encode=False, output_pct=True, output_picture=True):
     """
+    Description
+    --------------
     This function output a table that give a statistic comparison between different groups.
     For example, if you want to know the difference of "report to police" of two sexs, different ages or different type
     of crimes. This function would help. It also support output rate/percentage of two group.
     This function could also output a graph.
 
-    :param dataname: string, default "Personal Victimization""
-    :param year: int, e.g. year = "2021"
-    :param group: string, define how you group victim, vaild params like "age", "sex"
-    :param target: string, define your target variables, valid params like "notify", "series"
-    :param target_range: int, the target range you interested in
-    :param pivot: boolean, if true, output pivot data; if false, output tidy data.
-    :param encode: boolean, if true, output numeric labels; if false, output original labels with meaning.
-    :param output_pct: boolen, if true, output rate of each group; if false, output number of each group.
-    :param output_picture: boolean, if true, output graph of plot.
-    :return:
+    Parameters
+    ---------------
+    : dataname: string, default "Personal Victimization""
+    : year: int, e.g. year = "2021"
+    : group: string, define how you group victim, vaild params like "age", "sex"
+    : target: string, define your target variables, valid params like "notify", "series"
+    : target_range: int, the target range you interested in
+    : pivot: boolean, if true, output pivot data; if false, output tidy data.
+    : encode: boolean, if true, output numeric labels; if false, output original labels with meaning.
+    : output_pct: boolen, if true, output rate of each group; if false, output number of each group.
+    : output_picture: boolean, if true, output graph of plot.
+
+    Output
+    ----------------
+    : dataframe (pivot or no)
+    : graph (if output picture true)
     """
 
     # request data:
