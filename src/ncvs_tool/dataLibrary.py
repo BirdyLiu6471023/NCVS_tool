@@ -13,7 +13,7 @@ def dataname2url():
     dataname2url["Household Victimization"] = "https://data.ojp.usdoj.gov/resource/gkck-euys"
     dataname2url["Household Population"] = "https://data.ojp.usdoj.gov/resource/ya4e-n9zp"
 
-    with open("src/ncvs_tool/dataname2url.json", "wb") as f:
+    with open("docs/dataname2url.json", "wb") as f:
         pickle.dump(dataname2url, f)
 
 
@@ -32,11 +32,11 @@ def get_survey_sample_size():
         else:
             break
     df = df.reset_index().drop("index", axis=1)
-    df.to_csv("src/ncvs_tool/sample_size.csv")
+    df.to_csv("docs/sample_size.csv")
 
 def extract_personal_victimization_cookbook():
     # read tables in pdf files and wrangling data:
-    df = tabula.read_pdf("src/ncvs_tool/NCVS_Select_person_level_codebook.pdf", pages=[6,7,8,9,10], lattice=True, guess=False, stream=True)
+    df = tabula.read_pdf("docs/NCVS_Select_person_level_codebook.pdf", pages=[6,7,8,9,10], lattice=True, guess=False, stream=True)
     pv_cb = {}
     all_features = set()
     for p in range(5):
@@ -104,7 +104,7 @@ def create_personal_victimization_dictionary():
         failed.remove("newwgt")
 
     if not failed:
-        with open("src/ncvs_tool/personal_victimization_dictionary.json", "wb") as f:
+        with open("docs/personal_victimization_dictionary.json", "wb") as f:
             pickle.dump(cv, f)
 
 

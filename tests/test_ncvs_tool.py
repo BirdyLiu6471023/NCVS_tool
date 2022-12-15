@@ -6,8 +6,8 @@ import numpy as np
 
 # 1) test required files in source:
 def test_dicfile_exist():
-    assert (os.path.exists("src/ncvs_tool/dataname2url.json") or os.path.exists("src/ncvs_tool/sample_size.csv")
-            or os.path.exists("src/ncvs_tool/personal_victimization_dictionary.json"))
+    assert (os.path.exists("docs/dataname2url.json") or os.path.exists("docs/sample_size.csv")
+            or os.path.exists("docs/personal_victimization_dictionary.json"))
 
 
 # 2) test ncvs analysis function ncvs_report:

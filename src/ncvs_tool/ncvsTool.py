@@ -6,15 +6,15 @@ import re
 import numpy as np
 import json
 import os
-if not os.path.exists("src/ncvs_tool/dataname2url.json"):
+if not os.path.exists("docs/dataname2url.json"):
     from ncvs_tool.dataLibrary import dataname2url
     dataname2url()
 
-if not os.path.exists("src/ncvs_tool/sample_size.csv"):
+if not os.path.exists("docs/sample_size.csv"):
     from ncvs_tool.dataLibrary import get_survey_sample_size
     get_survey_sample_size()
 
-if not os.path.exists("src/ncvs_tool/personal_victimization_dictionary.json"):
+if not os.path.exists("docs/personal_victimization_dictionary.json"):
     import ncvs_tool.dataLibrary
     ncvs_tool.dataLibrary.create_personal_victimization_dictionary()
 
@@ -22,7 +22,7 @@ class NCVStool:
 
     def __init__(self, dataname, api_token = None, username = None, password = None):
         # dic store the datasetname and its url:
-        with open("src/ncvs_tool/dataname2url.json", "rb") as f:
+        with open("docs/dataname2url.json", "rb") as f:
             self.dataname2url = pickle.load(f)
         self.dataname = dataname
         self.sample_size = None
@@ -138,7 +138,7 @@ class NCVStool:
         :return: sample_size: pd.DataFrame
         """
         # get_sample_size for the dataset you requested
-        sample_size = pd.read_csv("src/ncvs_tool/sample_size.csv")
+        sample_size = pd.read_csv("docs/sample_size.csv")
         if self.dataname == "Personal Victimization":
             self.sample_size = sample_size[["Year", "Persons(Interviewed)"]]
         elif self.dataname == "Household Victimization":
@@ -148,7 +148,7 @@ class NCVStool:
             return self.sample_size
 
     def label_transform(self, df):
-        with open("src/ncvs_tool/personal_victimization_dictionary.json", "rb") as f:
+        with open("docs/personal_victimization_dictionary.json", "rb") as f:
             data_dic = pickle.load(f)
 
         label_map = {}
