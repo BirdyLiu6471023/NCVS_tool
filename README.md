@@ -37,6 +37,4 @@ Each row is a personal vicitmization, there are totally 63.5k rows and 37 column
 
 ## Credits
 
-`ncvs_tool` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
-
-NCVS BJS
+`ncvs_tool` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter). API is from Bureau of Justice Statistics（BJS),  https://bjs.ojp.gov/national-crime-victimization-survey-ncvs-api#zjwnq9
