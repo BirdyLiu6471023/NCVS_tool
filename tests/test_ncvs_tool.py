@@ -28,3 +28,9 @@ def test_get_cook_book():
 def test_query_valid():
     s = ncvs_tool.NCVStool().get_valid_params()
     assert (len(s) == 37)
+
+
+# 5) test getting valid labels:
+def test_get_label():
+    l = ncvs_tool.NCVStool().get_valid_label("weapon")
+    assert (len(l) > 0)
